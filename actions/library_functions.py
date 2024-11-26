@@ -50,7 +50,7 @@ class Library:
             if year < 1 or year > date.today().year:
                 raise ValueError
         except ValueError:
-            return "Некорректно введен год издания. Год должен быть числом не больше текущего года"
+            return "\nНекорректно введен год издания. Год должен быть числом не больше текущего года"
 
         try:
             last_id = self.books[-1].id
@@ -69,7 +69,7 @@ class Library:
         
         self.save_books()
 
-        return f"Книга {author} - {title} с годом издания {year} добавлена"
+        return f"\nКнига {author} - {title} с годом издания {year} добавлена"
     
 
     def delete_book(self, id): 
@@ -82,15 +82,15 @@ class Library:
                         self.books.remove(book)
                         self.save_books()
 
-                        return f"Книга {book.author} - {book.title} удалена"
+                        return f"\nКнига {book.author} - {book.title} удалена\n"
 
-                return "Книга не найдена"
+                return "\nКнига не найдена"
             
             else:
-                return "Библиотека пуста"
+                return "\nБиблиотека пуста"
 
         except TypeError:
-            return "Библиотека пуста"
+            return "\nБиблиотека пуста"
         
 
     def search_book(self, data):
@@ -101,13 +101,13 @@ class Library:
                 if found_books: 
                     return "\n".join(f"ID: {book.id}, название: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}" for book in found_books)
                 else:
-                    return "Книга не найдена"
+                    return "\nКнига не найдена"
                 
             else: 
-                return "Библиотека пуста"
+                return "\nБиблиотека пуста"
 
         except TypeError:
-            return "Библиотека пуста"
+            return "\nБиблиотека пуста"
         
     def display_books(self):
 
@@ -118,10 +118,10 @@ class Library:
                     yield (f"ID: {book.id}, название книги: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}")
 
             else:
-                yield "Библиотека пуста"
+                yield "\nБиблиотека пуста"
 
         except TypeError:    
-            yield "Библиотека пуста"
+            yield "\nБиблиотека пуста"
         
     def change_status(self,id):
 
@@ -132,23 +132,23 @@ class Library:
                         if book.id == id:
 
                             if book.status == "в наличии":
-                                input(f"Книга {book.title} в наличии. Нажмите Enter, чтобы выдать книгу")
+                                input(f"\nКнига {book.title} в наличии. Нажмите Enter, чтобы выдать книгу")
                                 book.status = "выдана"
                             else:
-                                input(f"Книга {book.title} была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
+                                input(f"\nКнига {book.title} была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
                                 book.status = "в наличии"
 
                             self.save_books()
-                            return f"Статус изменен. Книга {book.title} {book.status}"
-                    raise ValueError("Книга не найдена")
+                            return f"\nСтатус изменен. Книга {book.title} {book.status}"
+                    raise ValueError("\nКнига не найдена")
 
                 except ValueError:
-                    return "Книга не найдена"
+                    return "\nКнига не найдена"
             else:
-                return "Библиотека пуста"
+                return "\nБиблиотека пуста"
 
         except TypeError:       
-            return "Библиотека пуста"
+            return "\nБиблиотека пуста"
     
 book = Library()
 

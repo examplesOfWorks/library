@@ -1,7 +1,7 @@
-from library_functions import *
+from actions.library_functions import *
 
 def go_1() -> None:
-    title: str = input("Введите название книги: ")
+    title: str = input("\nВведите название книги: ")
     author: str = input("Введите автора книги: ")
     year: str = str(input("Введите год издания книги: ")) 
 
@@ -22,8 +22,8 @@ def go_2():
         print(e)
 
 def go_3():
-    data = input("Для поиска книги введите её название, автора или год издания: ")
-    print("Результаты поиска:")
+    data = input("\nДля поиска книги введите её название, автора или год издания: ")
+    print("\nРезультаты поиска:")
     try:
         result = book.search_book(data)
         if result:
@@ -39,7 +39,7 @@ def go_4():
         print(e)
 
 def go_5():
-    id = input("Для изменения статуса книги введите её ID: ")
+    id = input("\nДля изменения статуса книги введите её ID: ")
     try:
         result = book.change_status(int(id))
         if result:

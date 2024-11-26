@@ -1,5 +1,5 @@
 from time import sleep
-from menu_actions import *
+from actions.menu_actions import *
 
 def menu_run() -> None:
 
@@ -11,7 +11,7 @@ def menu_run() -> None:
         3) Поиск книги
         4) Показать все книги
         5) Изменить статус книги
-        0) Выход
+        0) Выход (или Ctrl+C)
     """
 
     menu_print = True
@@ -27,6 +27,7 @@ def menu_run() -> None:
 
         # при выборе выхода выходим из программы
         if choice == "0":
+            print("\nБудем рады видеть вас в библиотеке снова!")
             break
 
         # запуск действия, соответствующего выбору
@@ -38,21 +39,24 @@ def menu_run() -> None:
             elif choice == "3":
                 go_3()
             elif choice == "4":
-                print("Список всех книг:")
+                print("\nСписок всех книг:")
                 go_4()
             elif choice == "5":
                 go_5()
             else:
                 menu_print = False
-                print("Этого пункта меню не существует")
+                print("\nЭтого пункта меню не существует")
                 continue
 
-            input("Нажмите Enter для продолжения...")
+            input("\nНажмите Enter для продолжения...")
             menu_print = True
 
         except Exception as e:
-            print("Произошла ошибка:", e)
+            print("\nПроизошла ошибка:", e)
             sleep(3)
-            input("Нажмите Enter для продолжения...")
+            input("\nНажмите Enter для продолжения...")
             continue
-menu_run()
+
+
+
+
