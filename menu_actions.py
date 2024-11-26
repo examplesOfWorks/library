@@ -6,7 +6,7 @@ def go_1() -> None:
     year: str = str(input("Введите год издания книги: ")) 
 
     try:
-        result = add_book(title, author, year)
+        result = book.add_book(title, author, year)
         if result:
             print(result)
     except Exception as e:
@@ -15,7 +15,7 @@ def go_1() -> None:
 def go_2():
     id: str = input("Для удаления книги введите её ID: ")
     try:
-        result = delete_book(int(id))
+        result = book.delete_book(int(id))
         if result:
             print(result)
     except Exception as e:
@@ -23,8 +23,9 @@ def go_2():
 
 def go_3():
     data = input("Для поиска книги введите её название, автора или год издания: ")
+    print("Результаты поиска:")
     try:
-        result = search_book(data)
+        result = book.search_book(data)
         if result:
             print(result)
     except Exception as e:
@@ -32,16 +33,17 @@ def go_3():
 
 def go_4():
     try:
-        for book in display_books():
-            print(book)
+        for b in book.display_books():
+            print(b)
     except Exception as e:
         print(e)
 
 def go_5():
     id = input("Для изменения статуса книги введите её ID: ")
     try:
-        result = change_status(int(id))
+        result = book.change_status(int(id))
         if result:
             print(result)
     except Exception as e:
         print(e)
+

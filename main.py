@@ -4,6 +4,7 @@ from menu_actions import *
 def menu_run() -> None:
 
     menu_str = """
+              МЕНЮ
         Выберите действие:
         1) Добавить книгу
         2) Удалить книгу
@@ -11,7 +12,6 @@ def menu_run() -> None:
         4) Показать все книги
         5) Изменить статус книги
         0) Выход
-        menu - меню
     """
 
     menu_print = True
@@ -36,23 +36,19 @@ def menu_run() -> None:
             elif choice == "2":
                 go_2()
             elif choice == "3":
-                print("Результаты поиска:")
                 go_3()
             elif choice == "4":
                 print("Список всех книг:")
                 go_4()
             elif choice == "5":
                 go_5()
-            elif choice == "help":
-                print(menu_str)
             else:
+                menu_print = False
                 print("Этого пункта меню не существует")
                 continue
 
-            if choice != "menu":
-                menu_print = False
-
             input("Нажмите Enter для продолжения...")
+            menu_print = True
 
         except Exception as e:
             print("Произошла ошибка:", e)

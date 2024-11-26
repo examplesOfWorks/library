@@ -1,133 +1,172 @@
 import json
 from datetime import date
 
-def add_book(title, author, year):
-    try:
-        with open("library/books.json", 'r', encoding='utf-8') as file:
-            all_books = json.load(file)
-    except FileNotFoundError:
-        all_books = {"books": []}
+class Book:
+    def __init__(self, id, title, author, year, status):
+        self.id = id
+        self.title = title
+        self.author = author
+        self.year = year
+        self.status = status
 
-    try:
-        year = int(year)
-        if year < 1 or year > date.today().year:
-            raise ValueError
-    except ValueError:
-        return "Некорректно введен год издания. Год должен быть числом не больше текущего года"
+    def __str__(self):
+        return f"ID: {self.id}, название книги: {self.title}, автор: {self.author}, год издания: {self.year}, статус: {self.status}"
 
-    try:
-        last_id = all_books["books"][-1]["id"]
-    except IndexError:
-        last_id = 0
+class Library:
+    def __init__(self):
+        self.file_name = "library/books.json"
+        self.books = self.load_books()
 
-    data = {
-        "id": last_id + 1,
-        "title": title,
-        "author": author,
-        "year": year,
-        "status": "в наличии"
-    }
-
-    all_books["books"].append(data)
-    with open("library/books.json", 'w', encoding='utf-8') as file:
-        json.dump(all_books, file, indent=4)
-    return f"Книга {author} - {title} с годом издания {year}  добавлена"
-
-# print(add_book("title1", "author1", "2024"))
-# print(add_book("title2", "author2", "1998"))
-# print(add_book("title3", "author3", "2004"))
-# print(add_book("title4", "author4", "2021"))
-# print(add_book("title5", "author5", "2022"))
-
-def delete_book(id) -> None:
-    try:
-
-        with open("library/books.json", 'r', encoding='utf-8') as file:
-            all_books = json.load(file)
+    def load_books(self):
         try:
-            for book in all_books["books"]:
-                if book["id"] == id:
-                    all_books["books"].remove(book)
-                    with open("library/books.json", 'w', encoding='utf-8') as file:
-                        json.dump(all_books, file, indent=4)
-                    return f"Книга {book["author"]} - {book["title"]} удалена"
-            raise ValueError("Книга не найдена")
+            with open(self.file_name, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                return [Book(book["id"], book["title"], book["author"], book["year"], book["status"]) for book in data["books"]]
+            
+        except FileNotFoundError:
+            data = {"books": []}
+            with open(self.file_name, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=4)
 
+        except json.JSONDecodeError:
+            data = {"books": []}
+            with open(self.file_name, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=4)
+
+    def save_books(self):
+        data = {"books": [{"id": book.id, "title": book.title, "author": book.author, "year": book.year, "status": book.status} 
+                          for book in self.books]}
+
+        with open(self.file_name, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=4)
+
+
+    def add_book(self, title, author, year):
+
+        self.load_books()
+
+        try:
+            year = int(year)
+            if year < 1 or year > date.today().year:
+                raise ValueError
         except ValueError:
-            return "Книга не найдена"
+            return "Некорректно введен год издания. Год должен быть числом не больше текущего года"
+
+        try:
+            last_id = self.books[-1].id
+        except IndexError:
+            last_id = 0
+        except TypeError:
+            last_id = 0
+
+        data = Book(last_id + 1, title, author, year, "в наличии")
+
+        try:
+            self.books.append(data)
+        except AttributeError:
+            self.books = []
+            self.books.append(data)
         
-    except FileNotFoundError:
-        return "Библиотека пуста, пожалуйста, добавьте хотя бы одну книгу"
+        self.save_books()
 
-# print(delete_book(1))
-# print(delete_book(2))
-# print(delete_book(3))
-# print(delete_book(4))
-# print(delete_book(5))
+        return f"Книга {author} - {title} с годом издания {year} добавлена"
+    
 
+    def delete_book(self, id): 
+        try:
+            if self.books != []:
 
-def search_book(data):
-    try:
-       
-        with open("library/books.json", 'r', encoding='utf-8') as file:
-            all_books = json.load(file)
-        found_books = list(filter(lambda book: data in (book["title"], book["author"], str(book["year"])), all_books["books"]))
-        if found_books:
-            return "Найдено:\n" + "\n".join(f"ID: {book['id']}, название: {book["title"]}, автор: {book['author']}, год издания: {book['year']}, статус: {book['status']}" for book in found_books)
-        else:
-            return "Книга не найдена"
+                for book in self.books:
+                    if book.id == id:
 
-    except FileNotFoundError:
-        return "Библиотека пуста, пожалуйста, добавьте хотя бы одну книгу"
+                        self.books.remove(book)
+                        self.save_books()
 
+                        return f"Книга {book.author} - {book.title} удалена"
 
-# print(search_book("title4"))
+                return "Книга не найдена"
+            
+            else:
+                return "Библиотека пуста"
 
-def display_books():
+        except TypeError:
+            return "Библиотека пуста"
+        
 
-    try:
+    def search_book(self, data):
+        try:
+            if self.books != []:
 
-        with open("library/books.json", 'r', encoding='utf-8') as file:
-            all_books = json.load(file)["books"]
-            if all_books != []:
-                i = 0
-                while i < len(all_books):
-                    yield (f"ID: {all_books[i]['id']}, название книги: {all_books[i]['title']}, автор: {all_books[i]['author']}, год издания: {all_books[i]['year']}, статус: {all_books[i]['status']}")
-                    i += 1    
+                found_books = list(filter(lambda book: data in (book.title, book.author, str(book.year)), self.books))
+                if found_books: 
+                    return "\n".join(f"ID: {book.id}, название: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}" for book in found_books)
+                else:
+                    return "Книга не найдена"
+                
+            else: 
+                return "Библиотека пуста"
+
+        except TypeError:
+            return "Библиотека пуста"
+        
+    def display_books(self):
+
+        try:
+            if self.books != []:
+
+                for book in self.books:
+                    yield (f"ID: {book.id}, название книги: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}")
+
             else:
                 yield "Библиотека пуста"
 
-    except FileNotFoundError:
-        yield "Библиотека пуста, пожалуйста, добавьте хотя бы одну книгу"
-
-# for book in display_books():
-#     print(book)
-
-def change_status(id):
-
-    try:
-
-        with open("library/books.json", 'r', encoding='utf-8') as file:
-            all_books = json.load(file)
+        except TypeError:    
+            yield "Библиотека пуста"
+        
+    def change_status(self,id):
 
         try:
-            for book in all_books["books"]:
-                if book["id"] == id:
-                    if book["status"] == "в наличии":
-                        input(f"Книга {book['title']} в наличии. Нажмите Enter, чтобы выдать книгу")
-                        book["status"] = "выдана"
-                    else:
-                        input(f"Книга {book['title']} была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
-                        book["status"] = "в наличии"
-                    with open("library/books.json", 'w', encoding='utf-8') as file:
-                        json.dump(all_books, file, indent=4)
-                    return f"Статус изменен. Книга {book['title']} {book['status']}"
-            raise ValueError("Книга не найдена")
+            if self.books != []:
+                try:
+                    for book in self.books:
+                        if book.id == id:
 
-        except ValueError:
-            return "Книга не найдена"
-        
-    except FileNotFoundError:
-        return "Библиотека пуста, пожалуйста, добавьте хотя бы одну книгу"
+                            if book.status == "в наличии":
+                                input(f"Книга {book.title} в наличии. Нажмите Enter, чтобы выдать книгу")
+                                book.status = "выдана"
+                            else:
+                                input(f"Книга {book.title} была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
+                                book.status = "в наличии"
+
+                            self.save_books()
+                            return f"Статус изменен. Книга {book.title} {book.status}"
+                    raise ValueError("Книга не найдена")
+
+                except ValueError:
+                    return "Книга не найдена"
+            else:
+                return "Библиотека пуста"
+
+        except TypeError:       
+            return "Библиотека пуста"
     
-# print(change_status(2))
+book = Library()
+
+
+# print(book.add_book("title1", "author1", "2019"))
+# print(book.add_book("title2", "author2", "2009"))
+# print(book.add_book("title3", "author3", "2020"))
+
+# print(book.delete_book(5))
+
+# print(book.search_book("2011"))
+
+# for b in book.display_books():
+#     print(b)
+
+# print(book.change_status(3))
+
+
+
+
+

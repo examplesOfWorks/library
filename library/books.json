@@ -2,37 +2,23 @@
     "books": [
         {
             "id": 1,
-            "title": "title1",
-            "author": "author1",
-            "year": 2011,
-            "status": "\u0432 \u043d\u0430\u043b\u0438\u0447\u0438\u0438"
-        },
-        {
-            "id": 2,
-            "title": "title2",
-            "author": "author2",
-            "year": 1998,
-            "status": "\u0432 \u043d\u0430\u043b\u0438\u0447\u0438\u0438"
-        },
-        {
-            "id": 3,
-            "title": "title3",
-            "author": "author3",
-            "year": 2004,
+            "title": "t1",
+            "author": "a1",
+            "year": 1990,
             "status": "\u0432\u044b\u0434\u0430\u043d\u0430"
         },
         {
-            "id": 4,
-            "title": "title4",
-            "author": "author4",
-            "year": 2021,
+            "id": 2,
+            "title": "t2",
+            "author": "a2",
+            "year": 2008,
             "status": "\u0432 \u043d\u0430\u043b\u0438\u0447\u0438\u0438"
         },
         {
-            "id": 5,
-            "title": "title5",
-            "author": "author5",
-            "year": 2021,
+            "id": 4,
+            "title": "t1",
+            "author": "a4",
+            "year": 2024,
             "status": "\u0432 \u043d\u0430\u043b\u0438\u0447\u0438\u0438"
         }
     ]
