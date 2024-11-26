@@ -2,6 +2,16 @@ from time import sleep
 from actions.menu_actions import *
 
 def menu_run() -> None:
+    """Метод для отображения меню и перехода к доступным в нём действиям
+
+    Основное применение: запуск меню для работы с библиотекой
+    
+    Returns:
+        None
+
+    Exeptions:
+        Exception: Если возникли какие-либо ошибки
+    """
 
     menu_str = """
               МЕНЮ

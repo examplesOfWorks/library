@@ -1,5 +1,6 @@
-from actions.main import menu_run
+from openlib.main import menu_run
 
+# Запуск библиотеки
 if __name__ == "__main__":
     print("\nДобро пожаловать в библиотеку!")
     try:
