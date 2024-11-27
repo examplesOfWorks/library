@@ -96,7 +96,7 @@ class Library:
             json.dump(data, file, indent=4)
 
 
-    def add_book(self, title: str, author: str, year: str) -> str:
+    def add_book(self, title: str, author: str, year: int) -> str:
         """Метод для добавления книги в библиотеку
 
         Основное применение: добавление книги в библиотеку
@@ -143,9 +143,9 @@ class Library:
         #сохранение изменений
         self.save_books()
 
-        return f"\nКнига {author} - {title} с годом издания {year} добавлена"
+        return f"\nКнига {author} - \"{title}\" с годом издания {year} добавлена"
     
-    def delete_book(self, id: str) -> str: 
+    def delete_book(self, id: int) -> str: 
         """Метод для удаления книги из библиотеки
 
         Основное применение: удаление книги из библиотеки
@@ -164,12 +164,12 @@ class Library:
             if self.books != []:
 
                 for book in self.books:
-                    if book.id == id:
+                    if book.id == int(id):
 
                         self.books.remove(book)
                         self.save_books()
 
-                        return f"\nКнига {book.author} - {book.title} удалена\n"
+                        return f"\nКнига {book.author} - \"{book.title}\" удалена\n"
 
                 return "\nКнига не найдена"
             
@@ -178,6 +178,9 @@ class Library:
 
         except TypeError:
             return "\nБиблиотека пуста"
+        
+        except ValueError:
+            return "\nID должен быть числом"
         
 
     def search_book(self, data: str) -> str:
@@ -200,7 +203,7 @@ class Library:
 
                 found_books = list(filter(lambda book: data in (book.title, book.author, str(book.year)), self.books))
                 if found_books: 
-                    return "\n".join(f"ID: {book.id}, название: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}" for book in found_books)
+                    return "\n".join(f"ID: {book.id}, название: \"{book.title}\", автор: {book.author}, год издания: {book.year}, статус: {book.status}" for book in found_books)
                 else:
                     return "\nКнига не найдена"
                 
@@ -226,7 +229,7 @@ class Library:
             if self.books != []:
 
                 for book in self.books:
-                    yield (f"ID: {book.id}, название книги: {book.title}, автор: {book.author}, год издания: {book.year}, статус: {book.status}")
+                    yield (f"ID: {book.id}, название книги: \"{book.title}\", автор: {book.author}, год издания: {book.year}, статус: {book.status}")
 
             else:
                 yield "\nБиблиотека пуста"
@@ -234,7 +237,7 @@ class Library:
         except TypeError:    
             yield "\nБиблиотека пуста"
         
-    def change_status(self, id: str) -> str:
+    def change_status(self, id: int) -> str:
         """Метод для изменения статуса книги в библиотеке
 
         Основное применение: изменение статуса книги в библиотеке по указанному ID
@@ -248,27 +251,28 @@ class Library:
 
         Exeptions:
             TypeError: Если библиотека пуста
+            ValueError: Если книга с указанным ID не была найдена
         """
 
         try:
             if self.books != []:
                 try:
                     for book in self.books:
-                        if book.id == id:
+                        if book.id == int(id):
 
                             if book.status == "в наличии":
-                                input(f"\nКнига {book.title} в наличии. Нажмите Enter, чтобы выдать книгу")
+                                input(f"\nКнига \"{book.title}\" в наличии. Нажмите Enter, чтобы выдать книгу")
                                 book.status = "выдана"
                             else:
-                                input(f"\nКнига {book.title} была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
+                                input(f"\nКнига \"{book.title}\" была выдана. Нажмите Enter, чтобы вернуть книгу в библиотеку")
                                 book.status = "в наличии"
 
                             self.save_books()
-                            return f"\nСтатус изменен. Книга {book.title} {book.status}"
-                    raise ValueError("\nКнига не найдена")
+                            return f"\nСтатус изменен. Книга \"{book.title}\" {book.status}"
+                    raise ValueError("\nКнига не найдена или некорректно введен ID")
 
                 except ValueError:
-                    return "\nКнига не найдена"
+                    return "\nКнига не найдена или некорректно введен ID"
             else:
                 return "\nБиблиотека пуста"
 

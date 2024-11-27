@@ -1,5 +1,4 @@
 from actions.library_functions import *
-# import actions.library_functions as lib
 
 def go_1() -> None:
     """Метод перехода к добавлению книги в библиотеку.
@@ -39,7 +38,7 @@ def go_2() -> None:
     """
     id: str = input("Для удаления книги введите её ID: ")
     try:
-        result = book.delete_book(int(id))
+        result = book.delete_book(id)
         if result:
             print(result)
     except Exception as e:
@@ -100,7 +99,7 @@ def go_5() -> None:
     """
     id: str = input("\nДля изменения статуса книги введите её ID: ")
     try:
-        result: str = book.change_status(int(id))
+        result: str = book.change_status(id)
         if result:
             print(result)
     except Exception as e:
